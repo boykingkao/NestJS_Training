@@ -35,3 +35,4 @@ COPY --from=builder /home/node/node_modules/ /home/node/node_modules/
 # RUN mkdir logs
 
 CMD ["node", "dist/main.js"]
+

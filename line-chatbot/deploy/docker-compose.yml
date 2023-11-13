@@ -8,28 +8,41 @@ services:
     restart: always
     image: line-chatbot
     ports:
-      - 3000:3000
+      - "3000:3000"
     # networks:
-    #   - mssp
-
-    # env_file:
-    #   - ../.env
+    #   - ngrok_network
     environment:
       - DATABASE_USER=dockercompose_User
-      - DATABASE_PASSWORD=dockercompose_Passworddad
-      - DATABASE_PASSWORD1=dockercompose_Passworddad
-      - DATABASE_PASSWORD2=dockercompose_Passworddad
-      - DATABASE_PASSWORD3=dockercompose_Passworddad
-  
+      - DATABASE_PASSWORD=your_DB_password_here  # Modify with your actual DB password
+
+
+# ใช้ docker run --net=host -it --name ngrok-Container ngrok/ngrok http 3000 ไปก่อน
+
+  # ngrok:
+  #   image: ngrok/ngrok
+  #   restart: unless-stopped
+  #   # restart: always
+  #   command:
+  #     - "start"
+  #     - "--all"
+  #     - "--config"
+  #     - "/etc/ngrok.yml"
+  #   volumes:
+  #     - ./ngrok.yml:/etc/ngrok.yml
+  #     # - ./ngrok.yml:/etc/ngrok.yml
+  #   ports:
+  #     - "4040:4040"
+
+
   ngrok:
-    image: wernight/ngrok
-    restart: always
+    image: ngrok/ngrok
+    command: http 3000
     ports:
-      - 4040:4040
-    # networks:
-    #   - mssp
+      - "4040:4040"
+
+    network_mode: host
+
 
 # networks:
-#   external:
-#     name: mssp
-
+#   ngrok_network:
+#     driver: bridge
