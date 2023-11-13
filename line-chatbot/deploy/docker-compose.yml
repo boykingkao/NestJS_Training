@@ -20,9 +20,11 @@ services:
       - DATABASE_PASSWORD1=dockercompose_Passworddad
       - DATABASE_PASSWORD2=dockercompose_Passworddad
       - DATABASE_PASSWORD3=dockercompose_Passworddad
+  
+  ngrok:
+    image: wernight/ngrok
+    restart: always
+    ports:
+      - 4040:4040
+   
 
-
-
-networks:
-  mssp:
-    external: true
