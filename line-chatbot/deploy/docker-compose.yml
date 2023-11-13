@@ -1,0 +1,28 @@
+version: '3'
+services:
+  line-Chatbot:
+    container_name: line-Chatbot-Container
+    build: 
+      context: ../
+      dockerfile: deploy/Dockerfile
+    restart: always
+    image: line-chatbot
+    ports:
+      - 3000:3000
+    # networks:
+    #   - mssp
+
+    # env_file:
+    #   - ../.env
+    environment:
+      - DATABASE_USER=dockercompose_User
+      - DATABASE_PASSWORD=dockercompose_Passworddad
+      - DATABASE_PASSWORD1=dockercompose_Passworddad
+      - DATABASE_PASSWORD2=dockercompose_Passworddad
+      - DATABASE_PASSWORD3=dockercompose_Passworddad
+
+
+
+networks:
+  mssp:
+    external: true
