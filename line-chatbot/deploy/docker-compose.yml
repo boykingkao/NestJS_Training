@@ -26,5 +26,10 @@ services:
     restart: always
     ports:
       - 4040:4040
-   
+    # networks:
+    #   - mssp
+
+# networks:
+#   external:
+#     name: mssp
 
