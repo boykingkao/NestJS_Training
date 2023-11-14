@@ -19,6 +19,50 @@ let LineService = class LineService {
             channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
             channelSecret: process.env.LINE_CHANNEL_SECRET,
         };
+        this.cardMessage = [
+            {
+                type: "flex",
+                altText: "This is a Flex Message",
+                contents: {
+                    type: "bubble",
+                    header: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "text",
+                                text: "DATS",
+                                color: "#FFFFFF",
+                            },
+                        ],
+                        backgroundColor: "#1C1C1C",
+                    },
+                    body: {
+                        type: "box",
+                        layout: "vertical",
+                        spacing: "md",
+                        contents: [
+                            {
+                                type: "image",
+                                url: "https://www.linefriends.com/content/banner/201804/3b5364c97c2d4a26988f85acdc78514e.jpg",
+                                size: "full",
+                                aspectRatio: "16:9",
+                                aspectMode: "cover",
+                            },
+                            {
+                                type: "button",
+                                style: "primary",
+                                action: {
+                                    type: "uri",
+                                    label: "CEO Workout",
+                                    uri: "https://example.com",
+                                },
+                            },
+                        ],
+                    },
+                },
+            },
+        ];
     }
     handleLineEvents(body) {
         if (body.events[0].type === "message") {
@@ -31,40 +75,48 @@ let LineService = class LineService {
         return "test";
     }
     async replyMessage(message, replyToken) {
-        const dataString = JSON.stringify({
-            replyToken: replyToken,
-            messages: [
+        let replyMessage = '';
+        if (message.toLowerCase() == 'open') {
+            replyMessage = this.cardMessage;
+        }
+        else {
+            replyMessage = [
                 {
                     type: "text",
                     text: message
-                },
-            ],
+                }
+            ];
+        }
+        const dataString = JSON.stringify({
+            replyToken: replyToken,
+            messages: replyMessage
         });
         const headers = {
             "Content-Type": "application/json",
             Authorization: "Bearer " + process.env.LINE_CHANNEL_ACCESS_TOKEN,
         };
         const webhookOptions = {
-            hostname: 'api.line.me',
-            path: '/v2/bot/message/reply',
-            method: 'POST',
+            hostname: "api.line.me",
+            path: "/v2/bot/message/reply",
+            method: "POST",
             headers: headers,
         };
+        const broadcastURL = "https://api.line.me/v2/bot/message/broadcast";
+        const replyURL = "https://api.line.me/v2/bot/message/reply";
         try {
-            const response = await this.httpService.post('https://api.line.me/v2/bot/message/reply', dataString, { headers }).toPromise();
+            const response = await this.httpService
+                .post(replyURL, dataString, { headers })
+                .toPromise();
             return response.data;
         }
         catch (error) {
-            console.error('Error:', error);
+            console.error("Error:", error);
             throw error;
         }
-        this.httpService.get("http://localhost:3000/line").subscribe((res) => {
-            console.log(res.data);
-        });
     }
     testService() {
         const DB_Password = process.env.DATABASE_PASSWORD;
-        console.log('test Service');
+        console.log("test Service");
         return this.lineConfig;
     }
 };
