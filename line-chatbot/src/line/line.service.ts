@@ -7,51 +7,53 @@ import { Client } from "@line/bot-sdk";
 
 @Injectable()
 export class LineService {
-  // private readonly lineClient: Client;
+  
+
 
   lineConfig = {
     channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
     channelSecret: process.env.LINE_CHANNEL_SECRET,
+    liffId: process.env.LIFF_ID,
+    liffUrl: process.env.LIFF_URL,
   };
 
-  // this.lineClient = new Client(config);
+  constructor(private readonly httpService: HttpService) {
+  }
 
-  constructor(private readonly httpService: HttpService) {}
+  // liff.init({liffId: ""})
 
   handleLineEvents(body: any) {
-    // console.log(body);
-    // console.log(body.events[0].message.text);
-    if (body.events[0].type === "message") {
+    console.log(body);
+    console.log(body.events[0].message.text);
+
+    const message: string = body.events[0].message.text;
+    const replyToken: string = body.events[0].replyToken;
+
+    if (body.events[0].type === "message" && body.events[0].message.type === "text") {
       console.log({ message: body.events[0].message.text });
       console.log({ replyToken: body.events[0].replyToken });
-      const message: string = body.events[0].message.text;
-      const replyToken: string = body.events[0].replyToken;
+      
 
       this.replyMessage(message, replyToken);
+    }else{
+      this.replyMessage('your message is not text type', replyToken);
     }
     return "test";
   }
 
   async replyMessage(message: string, replyToken: string) {
+    let replyMessage: any = "";
 
-    let replyMessage:any = ''
-
-    if(message.toLowerCase() == 'open'){
-        replyMessage = this.cardMessage
-    }else{
-        replyMessage = [
-          {
-            type: "text",
-            text: message
-          }
-        ]
+    if ( message && message.toLowerCase() == "open") {
+      replyMessage = this.cardMessage;
+    } else {
+      replyMessage = [
+        {
+          type: "text",
+          text: message,
+        },
+      ];
     }
-
-    // switch(message.toLowerCase()){
-    //   case 'open':
-    // }
-
-
 
     const dataString = JSON.stringify({
       // Define reply token
@@ -61,12 +63,11 @@ export class LineService {
       //   {
       //     type: "text",
       //     text: message
-      //   },
+      //   }, 
 
       // ],
 
-      
-      messages: replyMessage
+      messages: replyMessage,
     });
 
     const headers = {
@@ -75,34 +76,7 @@ export class LineService {
       Authorization: "Bearer " + process.env.LINE_CHANNEL_ACCESS_TOKEN,
     };
 
-    const webhookOptions = {
-      hostname: "api.line.me",
-      path: "/v2/bot/message/reply",
-      method: "POST",
-      headers: headers,
-    };
-
-    // const request = https.request(webhookOptions, (res) => {
-    //     res.on('data', (d) => {
-    //       process.stdout.write(d);
-    //     });
-    //   });
-
-    //   request.on('error', (err) => {
-    //     console.error(err);
-    //   });
-
-    //   request.write(dataString);
-    //   request.end();
-
-    // this.httpService.post("https://api.line.me/v2/bot/message/reply", {
-    //   data: dataString,
-    //   headers: headers,
-    // }).subscribe((res) => {
-    //   console.log(res.data);
-    // });
-
-    const broadcastURL = "https://api.line.me/v2/bot/message/broadcast";
+    const broadcastReplyURL = "https://api.line.me/v2/bot/message/broadcast";
     const replyURL = "https://api.line.me/v2/bot/message/reply";
     try {
       const response = await this.httpService
@@ -121,6 +95,8 @@ export class LineService {
     console.log("test Service");
     return this.lineConfig;
   }
+
+  
 
 
 
@@ -166,5 +142,6 @@ export class LineService {
           ],
         },
       },
-    },]
+    },
+  ];
 }

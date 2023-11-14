@@ -4,6 +4,8 @@ export declare class LineService {
     lineConfig: {
         channelAccessToken: string;
         channelSecret: string;
+        liffId: string;
+        liffUrl: string;
     };
     constructor(httpService: HttpService);
     handleLineEvents(body: any): string;
@@ -11,6 +13,8 @@ export declare class LineService {
     testService(): {
         channelAccessToken: string;
         channelSecret: string;
+        liffId: string;
+        liffUrl: string;
     };
     cardMessage: {
         type: string;

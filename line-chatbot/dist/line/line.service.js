@@ -18,6 +18,8 @@ let LineService = class LineService {
         this.lineConfig = {
             channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
             channelSecret: process.env.LINE_CHANNEL_SECRET,
+            liffId: process.env.LIFF_ID,
+            liffUrl: process.env.LIFF_URL,
         };
         this.cardMessage = [
             {
@@ -65,43 +67,42 @@ let LineService = class LineService {
         ];
     }
     handleLineEvents(body) {
-        if (body.events[0].type === "message") {
+        console.log(body);
+        console.log(body.events[0].message.text);
+        const message = body.events[0].message.text;
+        const replyToken = body.events[0].replyToken;
+        if (body.events[0].type === "message" && body.events[0].message.type === "text") {
             console.log({ message: body.events[0].message.text });
             console.log({ replyToken: body.events[0].replyToken });
-            const message = body.events[0].message.text;
-            const replyToken = body.events[0].replyToken;
             this.replyMessage(message, replyToken);
+        }
+        else {
+            this.replyMessage('your message is not text type', replyToken);
         }
         return "test";
     }
     async replyMessage(message, replyToken) {
-        let replyMessage = '';
-        if (message.toLowerCase() == 'open') {
+        let replyMessage = "";
+        if (message && message.toLowerCase() == "open") {
             replyMessage = this.cardMessage;
         }
         else {
             replyMessage = [
                 {
                     type: "text",
-                    text: message
-                }
+                    text: message,
+                },
             ];
         }
         const dataString = JSON.stringify({
             replyToken: replyToken,
-            messages: replyMessage
+            messages: replyMessage,
         });
         const headers = {
             "Content-Type": "application/json",
             Authorization: "Bearer " + process.env.LINE_CHANNEL_ACCESS_TOKEN,
         };
-        const webhookOptions = {
-            hostname: "api.line.me",
-            path: "/v2/bot/message/reply",
-            method: "POST",
-            headers: headers,
-        };
-        const broadcastURL = "https://api.line.me/v2/bot/message/broadcast";
+        const broadcastReplyURL = "https://api.line.me/v2/bot/message/broadcast";
         const replyURL = "https://api.line.me/v2/bot/message/reply";
         try {
             const response = await this.httpService

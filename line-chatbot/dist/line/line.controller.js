@@ -26,6 +26,9 @@ let LineController = class LineController {
         const result = await this.lineService.handleLineEvents(body);
         res.status(200).send('ok');
     }
+    async handleLiff(res) {
+        res.status(200).send('result');
+    }
 };
 exports.LineController = LineController;
 __decorate([
@@ -42,6 +45,13 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], LineController.prototype, "handleLineEvents", null);
+__decorate([
+    (0, common_1.Get)('test'),
+    __param(0, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], LineController.prototype, "handleLiff", null);
 exports.LineController = LineController = __decorate([
     (0, common_1.Controller)('line'),
     __metadata("design:paramtypes", [line_service_1.LineService])

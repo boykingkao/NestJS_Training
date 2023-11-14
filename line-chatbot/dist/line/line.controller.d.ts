@@ -5,4 +5,5 @@ export declare class LineController {
     constructor(lineService: LineService);
     getHello(): any;
     handleLineEvents(body: any, res: Response): Promise<void>;
+    handleLiff(res: Response): Promise<void>;
 }

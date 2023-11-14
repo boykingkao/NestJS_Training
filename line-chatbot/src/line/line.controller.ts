@@ -34,5 +34,15 @@ export class LineController {
 
   }
 
+
+  @Get('test')
+  async handleLiff(@Res() res: Response) {
+
+
+    res.status(200).send('result');
+
+
+  }
+
   
 }
