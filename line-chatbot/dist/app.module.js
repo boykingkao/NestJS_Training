@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
+const axios_1 = require("@nestjs/axios");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const line_controller_1 = require("./line/line.controller");
@@ -25,6 +26,7 @@ exports.AppModule = AppModule = __decorate([
             config_1.ConfigModule.forRoot({
                 load: [configuration_1.default, lineConfiguration_1.default],
             }),
+            axios_1.HttpModule,
             line_module_1.LineModule,
         ],
         controllers: [app_controller_1.AppController, line_controller_1.LineController],

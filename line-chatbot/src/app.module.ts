@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LineController } from './line/line.controller';
@@ -8,6 +9,7 @@ import { LineModule } from './line/line.module';
 import configuration from './config/configuration';
 import lineConfiguration from './config/lineConfiguration';
 
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -15,6 +17,7 @@ import lineConfiguration from './config/lineConfiguration';
       // envFilePath: '.env',
       // isGlobal: true,
     }),
+    HttpModule,
     LineModule,
   ],
   controllers: [AppController, LineController],

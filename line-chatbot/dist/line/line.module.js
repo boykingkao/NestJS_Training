@@ -12,6 +12,8 @@ let LineModule = class LineModule {
 };
 exports.LineModule = LineModule;
 exports.LineModule = LineModule = __decorate([
-    (0, common_1.Module)({})
+    (0, common_1.Module)({
+        imports: []
+    })
 ], LineModule);
 //# sourceMappingURL=line.module.js.map
