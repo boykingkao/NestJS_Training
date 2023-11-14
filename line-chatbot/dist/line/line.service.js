@@ -12,15 +12,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LineService = void 0;
 const common_1 = require("@nestjs/common");
 const axios_1 = require("@nestjs/axios");
+const line = require("@line/bot-sdk");
 let LineService = class LineService {
     constructor(httpService) {
         this.httpService = httpService;
         this.lineConfig = {
             channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
             channelSecret: process.env.LINE_CHANNEL_SECRET,
-            liffId: process.env.LIFF_ID,
-            liffUrl: process.env.LIFF_URL,
         };
+        this.stickerMessage = [
+            {
+                type: "sticker",
+                packageId: "1",
+                stickerId: "1",
+            },
+        ];
         this.cardMessage = [
             {
                 type: "flex",
@@ -65,23 +71,38 @@ let LineService = class LineService {
                 },
             },
         ];
+        this.client = new line.Client(this.lineConfig);
     }
-    handleLineEvents(body) {
-        console.log(body);
-        console.log(body.events[0].message.text);
-        const message = body.events[0].message.text;
+    async handleLineEvents(body) {
+        console.log(body.events[0].message.type);
+        const messageType = body.events[0].message.type;
         const replyToken = body.events[0].replyToken;
-        if (body.events[0].type === "message" && body.events[0].message.type === "text") {
-            console.log({ message: body.events[0].message.text });
-            console.log({ replyToken: body.events[0].replyToken });
-            this.replyMessage(message, replyToken);
-        }
-        else {
-            this.replyMessage('your message is not text type', replyToken);
+        switch (messageType) {
+            case "text":
+                const text = body.events[0].message.text;
+                if (text) {
+                    await this.client.replyMessage(replyToken, {
+                        type: messageType,
+                        text: text,
+                    });
+                }
+                break;
+            case "sticker":
+                await this.client.replyMessage(replyToken, {
+                    type: "sticker",
+                    packageId: body.events[0].message.packageId,
+                    stickerId: body.events[0].message.stickerId,
+                });
+                break;
+            case "image":
+                console.log(body.events[0].message);
+            default:
+                console.log(`the message type is : ${messageType}`);
+                break;
         }
         return "test";
     }
-    async replyMessage(message, replyToken) {
+    async replyTheMessage(message, replyToken) {
         let replyMessage = "";
         if (message && message.toLowerCase() == "open") {
             replyMessage = this.cardMessage;
@@ -94,26 +115,10 @@ let LineService = class LineService {
                 },
             ];
         }
-        const dataString = JSON.stringify({
-            replyToken: replyToken,
-            messages: replyMessage,
+        await this.client.replyMessage(replyToken, {
+            type: "text",
+            text: message,
         });
-        const headers = {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + process.env.LINE_CHANNEL_ACCESS_TOKEN,
-        };
-        const broadcastReplyURL = "https://api.line.me/v2/bot/message/broadcast";
-        const replyURL = "https://api.line.me/v2/bot/message/reply";
-        try {
-            const response = await this.httpService
-                .post(replyURL, dataString, { headers })
-                .toPromise();
-            return response.data;
-        }
-        catch (error) {
-            console.error("Error:", error);
-            throw error;
-        }
     }
     testService() {
         const DB_Password = process.env.DATABASE_PASSWORD;
