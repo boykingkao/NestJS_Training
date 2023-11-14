@@ -50,6 +50,11 @@ export class LineService {
       case "text":
         const text = body.events[0].message.text;
         if (text) {
+
+          if( text.toLowerCase() === "open"){
+            await this.client.replyMessage(replyToken, this.cardMessage)
+          }
+
           await this.client.replyMessage(replyToken, {
             type: messageType,
             text: text,
@@ -147,7 +152,7 @@ export class LineService {
     },
   ];
 
-  cardMessage = [
+  cardMessage:any = [
     {
       type: "flex",
       altText: "This is a Flex Message",

@@ -81,6 +81,9 @@ let LineService = class LineService {
             case "text":
                 const text = body.events[0].message.text;
                 if (text) {
+                    if (text.toLowerCase() === "open") {
+                        await this.client.replyMessage(replyToken, this.cardMessage);
+                    }
                     await this.client.replyMessage(replyToken, {
                         type: messageType,
                         text: text,
