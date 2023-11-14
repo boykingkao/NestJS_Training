@@ -15,6 +15,7 @@ const line_controller_1 = require("./line/line.controller");
 const line_service_1 = require("./line/line.service");
 const line_module_1 = require("./line/line.module");
 const configuration_1 = require("./config/configuration");
+const lineConfiguration_1 = require("./config/lineConfiguration");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -22,7 +23,7 @@ exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule.forRoot({
-                load: [configuration_1.default],
+                load: [configuration_1.default, lineConfiguration_1.default],
             }),
             line_module_1.LineModule,
         ],

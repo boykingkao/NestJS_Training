@@ -9,9 +9,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LineService = void 0;
 const common_1 = require("@nestjs/common");
 let LineService = class LineService {
+    constructor() {
+        this.lineConfig = {
+            channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
+            channelSecret: process.env.LINE_CHANNEL_SECRET,
+        };
+    }
+    handleLineEvents(body) {
+        console.log(body);
+        console.log(body.events[0].message.text);
+        return body;
+    }
     testService() {
         const DB_Password = process.env.DATABASE_PASSWORD;
-        return `test line service ${DB_Password}`;
+        return this.lineConfig;
     }
 };
 exports.LineService = LineService;

@@ -1,3 +1,11 @@
 export declare class LineService {
-    testService(): string;
+    lineConfig: {
+        channelAccessToken: string;
+        channelSecret: string;
+    };
+    handleLineEvents(body: any): any;
+    testService(): {
+        channelAccessToken: string;
+        channelSecret: string;
+    };
 }
