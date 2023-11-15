@@ -23,11 +23,13 @@ let LineController = class LineController {
         return this.lineService.testService();
     }
     async handleLineEvents(body, res) {
-        const result = await this.lineService.handleLineEvents(body);
-        res.status(200).send('ok');
+        if (body.events.length != 0) {
+            const result = await this.lineService.handleLineEvents(body);
+        }
+        res.status(200).send();
     }
     async handleLiff(res) {
-        res.status(200).send('result');
+        res.status(200).send("result");
     }
 };
 exports.LineController = LineController;
@@ -38,7 +40,7 @@ __decorate([
     __metadata("design:returntype", Object)
 ], LineController.prototype, "getHello", null);
 __decorate([
-    (0, common_1.Post)('webhook'),
+    (0, common_1.Post)("webhook"),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
@@ -46,14 +48,14 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], LineController.prototype, "handleLineEvents", null);
 __decorate([
-    (0, common_1.Get)('test'),
+    (0, common_1.Get)("test"),
     __param(0, (0, common_1.Res)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], LineController.prototype, "handleLiff", null);
 exports.LineController = LineController = __decorate([
-    (0, common_1.Controller)('line'),
+    (0, common_1.Controller)("line"),
     __metadata("design:paramtypes", [line_service_1.LineService])
 ], LineController);
 //# sourceMappingURL=line.controller.js.map

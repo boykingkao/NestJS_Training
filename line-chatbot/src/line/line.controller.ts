@@ -10,11 +10,11 @@ import {
   Post,
   Put,
   Res,
-} from "@nestjs/common";import { LineService } from './line.service';
+} from "@nestjs/common";
+import { LineService } from "./line.service";
 import { Response } from "express";
 
-
-@Controller('line')
+@Controller("line")
 export class LineController {
   constructor(private readonly lineService: LineService) {}
 
@@ -24,25 +24,23 @@ export class LineController {
     return this.lineService.testService();
   }
 
-
-  @Post('webhook')
-  async handleLineEvents(@Body() body:any ,@Res() res: Response) {
-
-    const result = await this.lineService.handleLineEvents(body);
-    res.status(200).send('ok');
-
-
+  @Post("webhook")
+  async handleLineEvents(@Body() body: webhookData, @Res() res: Response) {
+    if (body.events.length != 0) {
+      const result = await this.lineService.handleLineEvents(body);
+    }
+    // console.log(body)
+    res.status(200).send();
   }
 
-
-  @Get('test')
+  @Get("test")
   async handleLiff(@Res() res: Response) {
-
-
-    res.status(200).send('result');
-
-
+    res.status(200).send("result");
   }
+}
 
-  
+
+interface webhookData{
+  destination:string,
+  events:any[]
 }
