@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+    options {
+        // Timeout counter starts AFTER agent is allocated
+        timeout(time: 1, unit: 'SECONDS')
+    }
+    stages {
+        stage('Prepare Job') {
+            steps {
+                echo 'test echo Prepare Job'
+                echo '******************************'
+            }
+        }
+        stage('Git Pull') {
+            steps {
+                echo 'test echo Git Pull'
+                echo '******************************'
+            }
+        }
+        stage('Build Image') {
+            steps {
+                echo 'test echo Build Image'
+                echo '******************************'
+            }
+        }
+        stage('Push image to Image Registry') {
+            steps {
+                echo 'test echo Push image to Image Registry'
+                echo '******************************'
+            }
+        }
+        stage('Cleanup') {
+            steps {
+                echo 'test echo Cleanup'
+                echo '******************************'
+            }
+        }
+    }
+}
