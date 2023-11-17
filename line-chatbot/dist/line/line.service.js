@@ -63,7 +63,7 @@ let LineService = class LineService {
                                 action: {
                                     type: "uri",
                                     label: "CEO Workout",
-                                    uri: "https://example.com",
+                                    uri: process.env.LIFF_URL,
                                 },
                             },
                         ],
